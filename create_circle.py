@@ -21,6 +21,7 @@ def main():
     margin = args.margin_size
     block_size = args.block_size
     radius = args.radius
+    chessboard = np.ones((block_size * h + margin * 2, block_size * w + margin * 2), dtype=np.uint8) * 255
 
     for y in range(h):
         for x in range(w):
@@ -34,9 +35,7 @@ def main():
     cw = 768
     chessboard = cv2.resize(chessboard,(ch,cw))
     #print chessboard.shape[:2]
-
-    chessboard = np.ones((block_size * h + margin * 2, block_size * w + margin * 2), dtype=np.uint8) * 255
-
+    ret2, circles = cv.findCirclesGrid(gray_for_circle, (10,7), flags = cv.CALIB_CB_SYMMETRIC_GRID)
     if ret2 == True:
         objpoints.append(objp)
         imgpoints.append(circles)
