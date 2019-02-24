@@ -2,7 +2,15 @@ import argparse
 import cv2
 import numpy as np
 
+# termination criteria
+criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
+# prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)
+objp = np.zeros((6*7,3), np.float32)
+objp[:,:2] = np.mgrid[0:7,0:6].T.reshape(-1,2)
+
+objpoints = [] # 3d point in real world space
+imgpoints = [] # 2d points in image plane.
 def get_args():
     parser = argparse.ArgumentParser(description="This script creates a circleboard image for calibration")
     parser.add_argument("--width", type=int, default=10)
@@ -36,8 +44,23 @@ def main():
     chessboard = cv2.resize(chessboard,(ch,cw))
     #print chessboard.shape[:2]
 
-    ret, circles = cv.findCirclesGrid(gray_for_circle, (10,7), flags = cv.CALIB_CB_SYMMETRIC_GRID)
+    ret2, circles = cv2.findCirclesGrid(chessboard, (10,7), flags = cv2.CALIB_CB_SYMMETRIC_GRID)
 
+    if ret2 == True:
+        objpoints.append(objp)
+        imgpoints.append(circles)
+        cv2.drawChessboardCorners(chessboard, (10, 7), circles, ret2)
+        print circles[0][0]
+        print circles[9][0]
+        print circles[69][0]
+        print circles[60][0]
+        
+
+    #cv2.imshow('img', chessboard)
+    #cv.imshow('inv_img',invgray)
+    #cv2.waitKey(0)
+    
+    #cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     main()
