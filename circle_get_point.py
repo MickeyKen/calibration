@@ -36,6 +36,8 @@ def main():
     chessboard = cv2.resize(chessboard,(ch,cw))
     #print chessboard.shape[:2]
 
+    ret, circles = cv.findCirclesGrid(gray_for_circle, (10,7), flags = cv.CALIB_CB_SYMMETRIC_GRID)
+
 
 if __name__ == '__main__':
     main()

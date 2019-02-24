@@ -21,7 +21,6 @@ def main():
     margin = args.margin_size
     block_size = args.block_size
     radius = args.radius
-    chessboard = np.ones((block_size * h + margin * 2, block_size * w + margin * 2), dtype=np.uint8) * 255
 
     for y in range(h):
         for x in range(w):
@@ -34,7 +33,14 @@ def main():
     ch = 1024
     cw = 768
     chessboard = cv2.resize(chessboard,(ch,cw))
-    print chessboard.shape[:2]
+    #print chessboard.shape[:2]
+
+    chessboard = np.ones((block_size * h + margin * 2, block_size * w + margin * 2), dtype=np.uint8) * 255
+
+    if ret2 == True:
+        objpoints.append(objp)
+        imgpoints.append(circles)
+        cv.drawChessboardCorners(new_img, (10, 7), circles, ret2)
 
     cv2.imshow("circleboard", chessboard)
     cv2.waitKey(0)
