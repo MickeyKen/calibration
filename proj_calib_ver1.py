@@ -11,8 +11,10 @@ criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
 
 ### prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0) ###
-objp = np.zeros((6*7,3), np.float32)
-objp[:,:2] = np.mgrid[0:7,0:6].T.reshape(-1,2)
+objp = np.zeros((10*7,3), np.float32)
+objp[:,:2] = np.mgrid[0:10,0:7].T.reshape(-1,2)
+
+print objp
 
 
 ### Arrays to store object points and image points from all the images. ###
@@ -29,6 +31,9 @@ projCirclePoints = []
 ### for ordinal calibration ###
 objpoints_c = [] # 3d point in real world space
 imgpoints_c = [] # 2d points in image plane.
+
+w_proj = 1024
+h_proj = 768
 
 
 ### for get .jpeg file ###
@@ -111,6 +116,8 @@ for fname in images:
     pts_dst = np.array([[corners2[0][0][0],corners2[0][0][1]], [corners2[8][0][0],corners2[8][0][1]], [corners2[62][0][0],corners2[62][0][1]], [corners2[54][0][0],corners2[54][0][1]]],np.float32)
 
     h, status = cv.findHomography(pts_src, pts_dst)
+    h = np.linalg.inv(h)
+    print h
 
 
   ### If gound, add objects point ###
@@ -122,15 +129,25 @@ for fname in images:
     #print circles[69][0]
     #print circles[60][0]
     #objectPointsAccum.append()
+
+    for i in circles:
+      mat = np.float32([[0.0,  0.0, 1.0]])
+      mat[0][0] = i[0][0]
+      mat[0][1] = i[0][1]
+      mat = mat.T
+      mat = np.dot(h, mat)
+      mat = mat / mat[2][0]
+      objectPointsAccum.append(mat)
+
     projCirclePoints.append(circles)
 
 
-#ret, K_proj, dist_coef_proj, rvecs, tvecs = cv.calibrateCamera(objectPointsAccum,
- #                                                               projCirclePoints,
-  #                                                              (w_proj, h_proj),
-   #                                                             K_proj,
-    #                                                            dist_coef_proj,
-     #                                                           flags = cv.CALIB_USE_INTRINSIC_GUESS)
-#print("proj calib mat after\n%s"%K_proj)
-#print("proj dist_coef %s"%dist_coef_proj.T)
-#print("calibration reproj err %s"%ret)
+ret, K_proj, dist_coef_proj, rvecs, tvecs = cv.calibrateCamera(objectPointsAccum,
+                                                                projCirclePoints,
+                                                               (w_proj, h_proj),
+                                                               None,
+                                                               None,
+                                                               flags = cv.CALIB_USE_INTRINSIC_GUESS)
+print("proj calib mat after\n%s"%K_proj)
+print("proj dist_coef %s"%dist_coef_proj.T)
+print("calibration reproj err %s"%ret)
