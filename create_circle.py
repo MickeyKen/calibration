@@ -29,18 +29,12 @@ def main():
             cy = int((y + 0.5) * block_size + margin)
             cv2.circle(chessboard, (cx, cy), radius, 0, thickness=-1)
 
-    #cv2.imwrite("circleboard{}x{}.png".format(w, h), chessboard)
 
     ch = 1024
     cw = 768
     chessboard = cv2.resize(chessboard,(ch,cw))
-    #print chessboard.shape[:2]
-    ret2, circles = cv.findCirclesGrid(gray_for_circle, (10,7), flags = cv.CALIB_CB_SYMMETRIC_GRID)
-    if ret2 == True:
-        objpoints.append(objp)
-        imgpoints.append(circles)
-        cv.drawChessboardCorners(new_img, (10, 7), circles, ret2)
 
+    #cv2.imwrite("circleboard{}x{}.png".format(w, h), chessboard)
     cv2.imshow("circleboard", chessboard)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
