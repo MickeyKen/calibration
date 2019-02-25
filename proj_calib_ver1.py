@@ -155,6 +155,7 @@ for fname in images:
         keisan_mat = keisan_mat / keisan_mat[2][0]
         copy_pW[c][0] = keisan_mat[0][0]
         copy_pW[c][1] = keisan_mat[1][0]
+        # print copy_pW
         c += 1
     # print copy_pW
 
@@ -198,8 +199,8 @@ ret, K_proj, dist_coef_proj, rvecs, tvecs = cv.calibrateCamera(objectPoints,
                                                                 projCirclePoints,
                                                                (w_proj, h_proj),
                                                                None,
-                                                               None,
-                                                               flags = cv.CALIB_USE_INTRINSIC_GUESS)
+                                                               None)
+                                                    # flags = cv.CALIB_USE_INTRINSIC_GUESS
 print("proj calib mat after\n%s"%K_proj)
 print("proj dist_coef %s"%dist_coef_proj.T)
 print("calibration reproj err %s"%ret)
